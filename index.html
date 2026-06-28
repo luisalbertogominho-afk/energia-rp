@@ -21,6 +21,17 @@ header {
     font-weight: bold;
 }
 
+button {
+    padding: 10px 20px;
+    background: #38bdf8;
+    border: none;
+    border-radius: 8px;
+    color: #0b1220;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
 .grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -71,15 +82,36 @@ footer {
 
 <header>⚡ CENTRAL ELÉTRICA RP - 34 POSTES</header>
 
+<div style="text-align:center;">
+    <button onclick="openPage()">Ver sistema avançado dos 34 postes</button>
+</div>
+
 <div class="grid" id="grid"></div>
 
 <footer>Sistema RP Energia © 2026</footer>
 
 <script>
 
+// botão abre segunda "página"
+function openPage() {
+    document.body.innerHTML = `
+        <header>⚡ SISTEMA AVANÇADO DOS POSTES</header>
+
+        <div style="text-align:center; margin: 15px;">
+            <button onclick="location.reload()">Voltar</button>
+        </div>
+
+        <div class="grid" id="grid2"></div>
+
+        <footer>Sistema Avançado RP © 2026</footer>
+    `;
+
+    loadAdvanced();
+}
+
+// sistema principal
 const grid = document.getElementById("grid");
 
-// criar 34 postes automaticamente
 for (let i = 1; i <= 34; i++) {
 
     let power = Math.floor(Math.random() * 100);
@@ -105,7 +137,38 @@ for (let i = 1; i <= 34; i++) {
     grid.appendChild(card);
 }
 
-// atualização em tempo real
+// sistema avançado (segunda página)
+function loadAdvanced() {
+
+    const grid2 = document.getElementById("grid2");
+
+    for (let i = 1; i <= 34; i++) {
+
+        let power = Math.floor(Math.random() * 100);
+
+        let status = "green";
+        let text = "ESTÁVEL";
+
+        if (power < 30) { status = "red"; text = "CRÍTICO"; }
+        else if (power < 70) { status = "yellow"; text = "INSTÁVEL"; }
+
+        let card = document.createElement("div");
+        card.className = "card";
+
+        card.innerHTML = `
+            <h3>🔧 POSTE AVANÇADO PT-${i.toString().padStart(3,'0')}</h3>
+            <div class="status ${status}">${text}</div>
+            <div class="bar">
+                <div class="fill" style="width:${power}%"></div>
+            </div>
+            <small>${power}% carga elétrica</small>
+        `;
+
+        grid2.appendChild(card);
+    }
+}
+
+// atualizar sistema principal
 setInterval(() => {
 
     let cards = document.querySelectorAll(".card");
